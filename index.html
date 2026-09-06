@@ -3,10 +3,1109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proyecto Jornada 2026</title>
+  <title>Jornada de Carreras 2026 · Instituto Cervantes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;600;800&family=Nunito:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.5/all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style id="estilosGlobales">
+    :root{
+      --app-bg:#101014;
+      --app-panel:#17171d;
+      --app-text:#e9e9ee;
+      --app-muted:#9a9aa5;
+      --app-accent:#7c5cff;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      background:var(--app-bg);
+      color:var(--app-text);
+      font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+      -webkit-font-smoothing:antialiased;
+      margin:0;
+    }
+    .contenedor-ancho{ max-width:1120px; margin-left:auto; margin-right:auto; padding-left:1rem; padding-right:1rem; }
+
+    /* ===== Branding del evento ===== */
+    .branding{ border-bottom:1px solid #26262f; padding-top:1.5rem; }
+    .branding .contenedor-ancho{ padding-bottom:1.1rem; }
+    .brand-eyebrow{
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:.74rem;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--app-accent);
+      margin:0 0 .4rem;
+    }
+    .brand-institucion{
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      font-size:1.45rem;
+      color:#fff;
+      margin:0 0 .25rem;
+      line-height:1.2;
+    }
+    .brand-charla{ margin:0; color:var(--app-muted); font-size:.93rem; }
+
+    /* ===== Header funcional ===== */
+    .app-header{ background:var(--app-panel); border-bottom:1px solid #26262f; }
+    .app-header .contenedor-ancho{ padding-top:1.35rem; padding-bottom:1.15rem; }
+    .app-titulo{
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:clamp(1.45rem,3vw,2.1rem);
+      margin:0 0 .4rem;
+      color:#fff;
+      line-height:1.15;
+    }
+    .app-sub{ margin:0; color:var(--app-muted); font-size:.93rem; max-width:82ch; }
+
+    main.contenedor-ancho{ padding-top:1.6rem; padding-bottom:1rem; }
+
+    /* ===== Paneles ===== */
+    .panel{
+      background:var(--app-panel);
+      border:1px solid #26262f;
+      border-radius:16px;
+      padding:1.35rem;
+      height:100%;
+    }
+    .panel-qr{
+      background:var(--app-panel);
+      border:1px solid #26262f;
+      border-radius:16px;
+      padding:1.25rem 1.35rem;
+    }
+    .panel-titulo{
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      font-size:1rem;
+      margin:0 0 1rem;
+      color:var(--app-text);
+    }
+    .panel-titulo small{ color:var(--app-muted); font-weight:400; font-family:'Inter',sans-serif; }
+
+    /* ===== Drop zone ===== */
+    .drop-zone{
+      border:2px dashed #3a3a45;
+      border-radius:12px;
+      padding:1.7rem 1.2rem;
+      text-align:center;
+      cursor:pointer;
+      color:var(--app-muted);
+      transition:border-color .15s ease, background .15s ease, color .15s ease;
+    }
+    .drop-zone:hover{ border-color:var(--app-accent); }
+    .drop-zone.dragover{
+      border-color:var(--app-accent);
+      background:rgba(124,92,255,.08);
+      color:var(--app-text);
+    }
+    .drop-titulo{ margin:0 0 .35rem; font-weight:500; color:inherit; }
+    .drop-sub{ margin:0; font-size:.82rem; }
+
+    /* ===== Textarea CSV ===== */
+    .csv-textarea{
+      font-family:'JetBrains Mono',ui-monospace,monospace;
+      font-size:.8rem;
+      line-height:1.55;
+      background:#0d0d11;
+      color:#cfcfd6;
+      border:1px solid #2a2a34;
+      border-radius:10px;
+      width:100%;
+      min-height:215px;
+      padding:.85rem .9rem;
+      resize:vertical;
+    }
+    .csv-textarea::placeholder{ color:#5f5f6b; }
+    .csv-textarea:focus{
+      outline:none;
+      border-color:var(--app-accent);
+      box-shadow:0 0 0 3px rgba(124,92,255,.35);
+    }
+
+    /* ===== Botones ===== */
+    .btn-accent{
+      background:var(--app-accent);
+      border:1px solid var(--app-accent);
+      color:#fff;
+      font-weight:600;
+    }
+    .btn-accent:hover, .btn-accent:focus{
+      background:#6a48f0;
+      border-color:#6a48f0;
+      color:#fff;
+    }
+    .acciones-botones{ gap:.55rem .6rem; }
+
+    /* ===== QR página ===== */
+    .qr-lienzo{
+      display:inline-block;
+      background:#fff;
+      padding:.55rem;
+      border-radius:12px;
+      line-height:0;
+    }
+    .qr-lienzo img, .qr-lienzo canvas{ display:block; }
+    .qr-pagina-url{
+      margin:.8rem 0 0;
+      font-family:'JetBrains Mono',ui-monospace,monospace;
+      font-size:.78rem;
+      color:var(--app-muted);
+      word-break:break-all;
+    }
+
+    /* ===== Notas .zip ===== */
+    .zip-note{ color:var(--app-muted); font-size:.85rem; line-height:1.55; margin:.45rem 0 0; }
+    .zip-note code{ color:#c7c7d1; }
+
+    /* ===== Grid de resultados ===== */
+    .resultado-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+      gap:1.5rem;
+    }
+    .empty-state{
+      grid-column:1 / -1;
+      border:2px dashed #3a3a45;
+      border-radius:14px;
+      padding:2.4rem 1.4rem;
+      text-align:center;
+      color:var(--app-muted);
+    }
+    .empty-state strong{ color:var(--app-text); }
+
+    /* ===== Tarjeta base ===== */
+    .card-presentacion{
+      position:relative;
+      border-radius:18px;
+      min-height:290px;
+      padding:1.35rem 1.35rem 1.1rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+      box-shadow:0 18px 40px rgba(0,0,0,.45);
+    }
+    .card-contenido{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:.9rem;
+    }
+    .card-bloque-nombre{ flex:1 1 auto; min-width:0; }
+    .card-eyebrow{
+      margin:0 0 .6rem;
+      font-size:.68rem;
+      font-weight:600;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:inherit;
+      opacity:.75;
+      display:inline-block;
+      font-family:'Inter',sans-serif;
+    }
+    .card-nombre{ margin:0; line-height:1.08; font-family:'Poppins',sans-serif; font-weight:700; color:inherit; }
+    .card-siglas{
+      flex:0 0 auto;
+      width:3.6rem;
+      height:3.6rem;
+      border-radius:50%;
+      border:1.5px solid currentColor;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:1.18rem;
+      letter-spacing:.02em;
+      color:inherit;
+      margin-top:.1rem;
+    }
+    .card-acciones{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.4rem;
+      margin-top:1rem;
+    }
+    .card-agradecimiento{
+      margin:.85rem 0 0;
+      font-family:'Inter',sans-serif;
+      font-size:.8rem;
+      line-height:1.5;
+      color:inherit;
+    }
+    .card-agradecimiento-nombre{ display:block; font-weight:600; margin-top:.15rem; }
+
+    /* ===== Chips ===== */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      max-width:100%;
+      overflow-wrap:anywhere;
+      padding:.4rem .78rem;
+      border-radius:999px;
+      border:1px solid currentColor;
+      background:var(--t-chip-bg, transparent);
+      color:inherit;
+      font-family:'Inter',sans-serif;
+      font-size:.76rem;
+      font-weight:600;
+      line-height:1;
+      text-decoration:none;
+      cursor:pointer;
+      vertical-align:middle;
+    }
+    a.chip{ text-decoration:none; }
+    a.chip:hover{ text-decoration:none; filter:brightness(1.08); }
+    button.chip{ appearance:none; }
+    button.chip:hover{ filter:brightness(1.1); }
+
+    /* Botones de control: siempre outline transparente */
+    .chip-descargar, .chip-imagen{ background:transparent; color:inherit; }
+
+    /* ===== Reroll ===== */
+    .reroll-btn{
+      position:absolute;
+      top:.85rem;
+      right:.85rem;
+      z-index:4;
+      width:2.1rem;
+      height:2.1rem;
+      padding:0;
+      border-radius:50%;
+      border:1px solid currentColor;
+      background:rgba(255,255,255,.18);
+      -webkit-backdrop-filter:blur(4px);
+      backdrop-filter:blur(4px);
+      color:inherit;
+      font-size:.95rem;
+      line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:transform .12s ease;
+    }
+    .reroll-btn:hover{ transform:scale(1.12) rotate(15deg); }
+
+    /* ============================================================
+       TEMAS
+    ============================================================ */
+
+    /* --- Menta Ártica --- */
+    .theme-menta{
+      --t-chip-bg:rgba(11,61,61,.08);
+      background:linear-gradient(135deg,#EAF6F6,#DCEFEA);
+      color:#0B3D3D;
+    }
+    .theme-menta .card-nombre{ font-family:'Poppins',sans-serif; font-weight:800; font-size:2.1rem; }
+    .theme-menta .reroll-btn{ background:rgba(11,61,61,.12); }
+    .theme-menta .chip-wsp{ background:#FF7B54; border-color:#FF7B54; color:#0B3D3D; }
+
+    /* --- Violeta Nocturno --- */
+    .theme-violeta{
+      --t-chip-bg:rgba(228,221,247,.1);
+      background:radial-gradient(circle at top right,#34275a,#241B3A);
+      color:#E4DDF7;
+    }
+    .theme-violeta::after{
+      content:"";
+      position:absolute;
+      top:-22%;
+      right:-28%;
+      width:85%;
+      height:85%;
+      z-index:0;
+      background:linear-gradient(135deg, rgba(242,177,56,0) 38%, rgba(242,177,56,.22) 55%, rgba(242,177,56,0) 72%);
+      pointer-events:none;
+    }
+    .theme-violeta .card-nombre{ font-family:'Fraunces',serif; font-weight:600; font-size:2.3rem; }
+    .theme-violeta .card-eyebrow{ color:#F2B138; opacity:1; }
+    .theme-violeta .chip-wsp{ background:transparent; border-color:#F2B138; color:#F2B138; }
+
+    /* --- Papel Kraft --- */
+    .theme-kraft{
+      --t-chip-bg:rgba(27,42,65,.08);
+      background:repeating-linear-gradient(0deg, rgba(255,255,255,.11) 0 1px, rgba(255,255,255,0) 1px 14px), #C9A876;
+      border:2px solid #a9865a;
+      color:#1B2A41;
+    }
+    .theme-kraft .card-eyebrow{
+      border:1px dashed currentColor;
+      border-radius:4px;
+      padding:.22rem .5rem;
+      letter-spacing:.14em;
+      opacity:1;
+    }
+    .theme-kraft .card-nombre{ font-family:'Fraunces',serif; font-weight:800; font-size:2.1rem; }
+    .theme-kraft .chip-wsp{ background:#E4A11B; border-color:#E4A11B; color:#1B2A41; }
+
+    /* --- Arcade Neón --- */
+    .theme-arcade{
+      --t-chip-bg:rgba(0,240,255,.08);
+      background:#12122B;
+      color:#fff;
+    }
+    .theme-arcade::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,240,255,.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,240,255,.1) 1px, transparent 1px);
+      background-size:26px 26px;
+    }
+    .theme-arcade .card-eyebrow{
+      font-family:'Press Start 2P',monospace;
+      font-size:.55rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:#00F0FF;
+      opacity:1;
+    }
+    .theme-arcade .card-nombre{
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:2rem;
+      color:#fff;
+      text-shadow:0 0 14px rgba(0,240,255,.5), 0 0 2px rgba(0,240,255,.8);
+    }
+    .theme-arcade .chip-wsp{ background:#FF2E93; border-color:#FF2E93; color:#fff; }
+
+    /* --- Botánico --- */
+    .theme-botanico{
+      --t-chip-bg:rgba(47,70,48,.07);
+      background:linear-gradient(180deg,#EEF3E8,#DCE8D2);
+      color:#2F4630;
+      border-radius:8px 32px 8px 32px;
+    }
+    .theme-botanico .card-eyebrow{ color:#7A9161; opacity:1; }
+    .theme-botanico .card-nombre{ font-family:'Fraunces',serif; font-weight:600; font-size:2.2rem; }
+    .theme-botanico .chip-wsp{ background:#C98A3B; border-color:#C98A3B; color:#fff; }
+
+    /* --- Concreto Industrial --- */
+    .theme-concreto{
+      --t-chip-bg:rgba(34,37,42,.07);
+      background:#D9D9D6;
+      color:#22252A;
+      border-radius:6px;
+    }
+    .theme-concreto::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:repeating-linear-gradient(0deg, rgba(34,37,42,.1) 0 1px, rgba(34,37,42,0) 1px 26px);
+    }
+    .theme-concreto .card-eyebrow{ color:#2D6CDF; opacity:1; }
+    .theme-concreto .card-nombre{ font-family:'Nunito',sans-serif; font-weight:900; font-size:2.1rem; }
+    .theme-concreto .chip{ border-radius:4px; }
+    .theme-concreto .chip-wsp{ background:#2D6CDF; border-color:#2D6CDF; color:#fff; }
+
+    /* ===== Footer ===== */
+    .app-footer{ margin-top:3rem; border-top:1px solid #26262f; }
+    .app-footer .contenedor-ancho{ padding-top:1.1rem; padding-bottom:1.6rem; text-align:center; color:var(--app-muted); font-size:.83rem; }
+  </style>
 </head>
 <body>
-  <h1>Proyecto Jornada 2026</h1>
-  <p>GitHub Pages desplegado con GitHub Actions.</p>
+
+  <!-- ===== Branding del evento ===== -->
+  <div class="branding">
+    <div class="contenedor-ancho">
+      <p class="brand-eyebrow">Jornada de Carreras 2026</p>
+      <p class="brand-institucion">Instituto Cervantes</p>
+      <p class="brand-charla">Charla: De la idea al proyecto, conociendo tecnologías Web y construyendo con IA</p>
+    </div>
+  </div>
+
+  <!-- ===== Header funcional ===== -->
+  <header class="app-header">
+    <div class="contenedor-ancho">
+      <h1 class="app-titulo">Generador de Tarjetas de Presentación</h1>
+      <p class="app-sub">Cargá un CSV con las columnas <strong>nombre</strong>, <strong>whatsapp</strong>, <strong>mail</strong>, <strong>linkedin</strong> e <strong>instagram</strong> (las dos últimas opcionales), o pegá el contenido directamente. Cada fila se convierte en una tarjeta de presentación con un estilo visual asignado al azar.</p>
+    </div>
+  </header>
+
+  <main class="contenedor-ancho">
+
+    <!-- ===== Paneles de entrada ===== -->
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <section class="panel">
+          <h2 class="panel-titulo">Opción 1 — Subir archivo CSV</h2>
+          <input type="file" id="fileInput" accept=".csv,text/csv" class="d-none">
+          <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir archivo CSV">
+            <p class="drop-titulo">Arrastrá tu archivo CSV acá o hacé clic para elegirlo</p>
+            <p class="drop-sub">Se aceptan archivos .csv con las columnas: nombre, whatsapp, mail, linkedin, instagram.</p>
+          </div>
+        </section>
+      </div>
+      <div class="col-lg-6">
+        <section class="panel">
+          <h2 class="panel-titulo">Opción 2 — Pegar el contenido CSV</h2>
+          <textarea id="csvText" class="csv-textarea" spellcheck="false" placeholder="nombre,whatsapp,mail,linkedin,instagram&#10;Luciana Fernández,+54 9 11 5555-0202,luciana.fernandez@correo.com,https://linkedin.com/in/lucianafernandez,&#10;Martín Costa,5491155550203,martin.costa@correo.com,,https://instagram.com/martin.costa&#10;Valentina Ruiz,+54 11 4555-7788,valentina.ruiz@correo.com,,"></textarea>
+        </section>
+      </div>
+    </div>
+
+    <!-- ===== Fila de botones ===== -->
+    <div class="acciones-botones d-flex flex-wrap align-items-center mt-4">
+      <button type="button" id="btnGenerar" class="btn btn-accent">✨ Generar tarjetas</button>
+      <button type="button" id="btnEjemplo" class="btn btn-outline-light">Cargar ejemplo</button>
+      <button type="button" id="btnDescargarZip" class="btn btn-outline-light" disabled>📦 Descargar todas (.zip)</button>
+      <button type="button" id="btnVerQR" class="btn btn-outline-light">🔲 Ver QR de esta página</button>
+    </div>
+
+    <!-- ===== Panel QR de la página ===== -->
+    <div id="qrPaginaWrapper" class="panel-qr d-none mt-4">
+      <h2 class="panel-titulo">Código QR de esta página</h2>
+      <div class="qr-lienzo"><div id="qrPagina"></div></div>
+      <p class="qr-pagina-url"></p>
+    </div>
+
+    <!-- ===== Notas .zip ===== -->
+    <p class="zip-note mt-3">📦 El .zip trae una carpeta <code>tarjetas/</code> con un archivo por persona y un <code>index.html</code> con los enlaces, listo para subir tal cual a un repositorio de GitHub, activar GitHub Pages, y que cada tarjeta quede disponible en una URL tipo <code>https://usuario.github.io/repo/tarjetas/nombre-apellido.html</code>.</p>
+    <p class="zip-note">📄 El botón <strong>“Cargar ejemplo”</strong> lee el archivo <code>personas.csv</code> ubicado en el mismo directorio que este HTML e incluye a todas las personas que figuren ahí.</p>
+    <p class="zip-note">ℹ️ Las columnas <code>linkedin</code> e <code>instagram</code> son opcionales: si una fila no las trae (o vienen vacías), la tarjeta de esa persona simplemente no muestra el chip correspondiente.</p>
+
+    <!-- ===== Grid de resultados ===== -->
+    <div id="resultado" class="resultado-grid mt-4"></div>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="contenedor-ancho">
+      Los estilos de tarjeta se asignan al azar. Usá el dado 🎲 de cada tarjeta para probar otras variantes.
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+
+    /* ============================================================
+       CONSTANTES Y ESTADO
+    ============================================================ */
+    const TEMAS = ['theme-menta','theme-violeta','theme-kraft','theme-arcade','theme-botanico','theme-concreto'];
+    const FUENTES_HREF = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@400;600;800&family=Nunito:wght@400;700;900&family=Press+Start+2P&display=swap';
+
+    let ultimasPersonas = [];
+    const urlActual = window.location.href;
+    let qrPaginaGenerado = false;
+
+    const $ = (id) => document.getElementById(id);
+    const dropZone = $('dropZone');
+    const fileInput = $('fileInput');
+    const csvText = $('csvText');
+    const resultado = $('resultado');
+    const btnGenerar = $('btnGenerar');
+    const btnEjemplo = $('btnEjemplo');
+    const btnDescargarZip = $('btnDescargarZip');
+    const btnVerQR = $('btnVerQR');
+    const qrPaginaWrapper = $('qrPaginaWrapper');
+
+    /* ============================================================
+       FUNCIONES PURAS (parseo, utilidades)
+    ============================================================ */
+    function splitCSVLine(line) {
+      const salida = [];
+      let actual = '';
+      let dentroComillas = false;
+      let i = 0;
+      const texto = String(line == null ? '' : line);
+      while (i < texto.length) {
+        const ch = texto[i];
+        if (dentroComillas) {
+          if (ch === '"') {
+            if (texto[i + 1] === '"') { actual += '"'; i += 2; continue; }
+            dentroComillas = false; i += 1; continue;
+          }
+          actual += ch; i += 1; continue;
+        }
+        if (ch === '"') { dentroComillas = true; i += 1; continue; }
+        if (ch === ',') { salida.push(actual); actual = ''; i += 1; continue; }
+        actual += ch; i += 1;
+      }
+      salida.push(actual);
+      return salida.map(function (v) { return v.trim(); });
+    }
+
+    function parseCSV(text) {
+      const crudo = String(text == null ? '' : text).replace(/^\uFEFF/, '');
+      const lineas = crudo.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0; });
+      if (lineas.length < 2) return [];
+      const headers = splitCSVLine(lineas[0]).map(function (h) { return h.toLowerCase(); });
+      const idx = function (regex) {
+        for (let j = 0; j < headers.length; j += 1) {
+          if (regex.test(headers[j])) return j;
+        }
+        return -1;
+      };
+      const colNombre = idx(/nombre|name/);
+      const colWhatsapp = idx(/whatsapp|wsp|tel|phone|celular/);
+      const colMail = idx(/mail|correo|email/);
+      const colLinkedin = idx(/linkedin/);
+      const colInstagram = idx(/instagram|ig/);
+      const personas = [];
+      for (let i = 1; i < lineas.length; i += 1) {
+        const valores = splitCSVLine(lineas[i]);
+        const get = function (j) { return (j >= 0 && j < valores.length) ? valores[j] : ''; };
+        const persona = {
+          nombre: get(colNombre),
+          whatsapp: get(colWhatsapp),
+          mail: get(colMail),
+          linkedin: get(colLinkedin),
+          instagram: get(colInstagram)
+        };
+        if (!persona.nombre && !persona.whatsapp && !persona.mail && !persona.linkedin && !persona.instagram) continue;
+        personas.push(persona);
+      }
+      return personas;
+    }
+
+    function limpiarNumero(numero) {
+      return String(numero == null ? '' : numero).replace(/\D+/g, '');
+    }
+
+    function slugify(texto) {
+      const limpio = String(texto == null ? '' : texto)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      return limpio || 'contacto';
+    }
+
+    function iniciales(nombre, mail) {
+      const texto = (nombre && nombre.trim()) ? nombre.trim()
+        : (mail && mail.trim()) ? mail.trim()
+        : 'Contacto';
+      const palabras = texto.split(/\s+/).filter(Boolean).slice(0, 2);
+      const letras = palabras.map(function (p) { return p.charAt(0).toUpperCase(); }).join('');
+      return letras || 'C';
+    }
+
+    function temaAleatorio(excluir) {
+      const pool = TEMAS.filter(function (t) { return t !== excluir; });
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    /* ============================================================
+       HELPERS DE RENDER
+    ============================================================ */
+    function esc(texto) {
+      return String(texto == null ? '' : texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function nombreVisible(persona) {
+      const n = (persona && persona.nombre && persona.nombre.trim()) ? persona.nombre.trim() : '';
+      return n || 'Contacto';
+    }
+
+    function urlSocial(valor) {
+      const v = (valor || '').trim();
+      return /^http/i.test(v) ? v : 'https://' + v;
+    }
+
+    function buildCardHTML(registro) {
+      const persona = registro.persona;
+      const nombre = nombreVisible(persona);
+      const siglas = iniciales(persona.nombre, persona.mail);
+      const mail = (persona.mail || '').trim();
+      const whatsapp = (persona.whatsapp || '').trim();
+      const linkedin = (persona.linkedin || '').trim();
+      const instagram = (persona.instagram || '').trim();
+
+      let html = '<button type="button" class="reroll-btn" title="Cambiar estilo" aria-label="Cambiar estilo">🎲</button>';
+      html += '<div class="card-contenido">';
+      html +=   '<div class="card-bloque-nombre">';
+      html +=     '<p class="card-eyebrow">Tarjeta de contacto</p>';
+      html +=     '<div class="card-nombre">' + esc(nombre) + '</div>';
+      html +=   '</div>';
+      html +=   '<div class="card-siglas" aria-hidden="true">' + esc(siglas) + '</div>';
+      html += '</div>';
+      html += '<div class="card-acciones">';
+      if (mail) {
+        html += '<a class="chip chip-mail" href="mailto:' + esc(mail) + '" title="' + esc(mail) + '">✉️ Mail</a>';
+      }
+      if (whatsapp) {
+        html += '<a class="chip chip-wsp" href="https://wa.me/' + limpiarNumero(whatsapp) + '" target="_blank" rel="noopener" title="Escribir por WhatsApp">💬 WhatsApp</a>';
+      }
+      if (linkedin) {
+        html += '<a class="chip chip-linkedin" href="' + esc(urlSocial(linkedin)) + '" target="_blank" rel="noopener" title="' + esc(linkedin) + '">🔗 LinkedIn</a>';
+      }
+      if (instagram) {
+        html += '<a class="chip chip-instagram" href="' + esc(urlSocial(instagram)) + '" target="_blank" rel="noopener" title="' + esc(instagram) + '">📷 Instagram</a>';
+      }
+      html += '<button type="button" class="chip chip-descargar">⬇️ Descargar</button>';
+      html += '<button type="button" class="chip chip-imagen">🖼️ Imagen</button>';
+      html += '</div>';
+      return html;
+    }
+
+    function rerollear(article, registro) {
+      registro.tema = temaAleatorio(registro.tema);
+      const clases = Array.prototype.slice.call(article.classList);
+      clases.forEach(function (c) {
+        if (c.indexOf('theme-') === 0) article.classList.remove(c);
+      });
+      article.classList.add(registro.tema);
+      if (window.Swal && typeof Swal.fire === 'function') {
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          icon: 'success',
+          title: 'Nuevo estilo aplicado',
+          showConfirmButton: false,
+          timer: 1300,
+          timerProgressBar: false,
+          background: '#17171d',
+          color: '#e9e9ee'
+        });
+      }
+    }
+
+    /* ============================================================
+       RENDER DE TARJETAS
+    ============================================================ */
+    function crearTarjeta(registro) {
+      const article = document.createElement('article');
+      article.className = 'card-presentacion ' + registro.tema;
+      article.innerHTML = buildCardHTML(registro);
+
+      const rerollBtn = article.querySelector('.reroll-btn');
+      rerollBtn.addEventListener('click', function () { rerollear(article, registro); });
+
+      const chipDescargar = article.querySelector('.chip-descargar');
+      chipDescargar.addEventListener('click', function () { descargarTarjetaIndividual(registro); });
+
+      const chipImagen = article.querySelector('.chip-imagen');
+      chipImagen.addEventListener('click', function () { descargarTarjetaImagen(registro, article); });
+
+      return article;
+    }
+
+    function renderTarjetas(personas) {
+      ultimasPersonas = [];
+      btnDescargarZip.disabled = true;
+
+      if (!personas || personas.length === 0) {
+        resultado.innerHTML = '';
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = '😕 No se encontraron filas válidas para generar tarjetas.<br><br><strong>Verificá que el CSV incluya las columnas nombre, whatsapp y mail</strong> (linkedin e instagram son opcionales) y que no esté vacío.';
+        resultado.appendChild(empty);
+        return;
+      }
+
+      const usados = {};
+      const entradas = personas.map(function (persona) {
+        const base = slugify(persona.nombre);
+        let slug = base;
+        let n = 2;
+        while (usados[slug]) { slug = base + '-' + n; n += 1; }
+        usados[slug] = true;
+        return { persona: persona, tema: temaAleatorio(), slug: slug };
+      });
+
+      ultimasPersonas = entradas;
+      resultado.innerHTML = '';
+      entradas.forEach(function (registro) {
+        resultado.appendChild(crearTarjeta(registro));
+      });
+      btnDescargarZip.disabled = false;
+    }
+
+    /* ============================================================
+       EXPORT / DESCARGA
+    ============================================================ */
+    const CSS_EXPORT_EXTRA = [
+      'body.export-cuerpo{background:#101014;color:#e9e9ee;font-family:"Inter",sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:1rem;}',
+      '.export-contenedor{width:100%;max-width:400px;}',
+      '.export-contenedor .card-presentacion{width:100%;}',
+      '.reroll-btn{display:none !important;}',
+      '.chip-descargar{display:none !important;}',
+      '.chip-imagen{display:none !important;}'
+    ].join('\n');
+
+    function generarHTMLIndividual(registro) {
+      const persona = registro.persona;
+      const nombre = nombreVisible(persona);
+      const estilos = $('estilosGlobales').textContent;
+      const marcado = buildCardHTML(registro);
+      return '<!DOCTYPE html>\n'
+        + '<html lang="es">\n'
+        + '<head>\n'
+        + '  <meta charset="UTF-8">\n'
+        + '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+        + '  <title>' + esc(nombre) + '</title>\n'
+        + '  <link rel="preconnect" href="https://fonts.googleapis.com">\n'
+        + '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+        + '  <link href="' + FUENTES_HREF + '" rel="stylesheet">\n'
+        + '  <style>\n' + estilos + '\n' + CSS_EXPORT_EXTRA + '\n  </style>\n'
+        + '</head>\n'
+        + '<body class="export-cuerpo">\n'
+        + '  <div class="export-contenedor">\n'
+        + '    <article class="card-presentacion ' + registro.tema + '">' + marcado + '</article>\n'
+        + '  </div>\n'
+        + '</body>\n'
+        + '</html>\n';
+    }
+
+    function descargarBlob(nombreArchivo, contenido, tipo) {
+      const blob = (contenido instanceof Blob)
+        ? contenido
+        : new Blob([contenido], { type: tipo || 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nombreArchivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function descargarTarjetaIndividual(registro) {
+      descargarBlob(registro.slug + '.html', generarHTMLIndividual(registro), 'text/html;charset=utf-8');
+    }
+
+    function esperarFuentes() {
+      const cargas = [
+        document.fonts.load('600 2.3rem "Fraunces"'),
+        document.fonts.load('800 2.2rem "Fraunces"'),
+        document.fonts.load('800 2.1rem "Poppins"'),
+        document.fonts.load('600 1rem "Poppins"'),
+        document.fonts.load('900 2.1rem "Nunito"'),
+        document.fonts.load('400 0.7rem "Press Start 2P"'),
+        document.fonts.load('400 1rem "Inter"'),
+        document.fonts.load('600 1rem "Inter"')
+      ];
+      return Promise.all([document.fonts.ready].concat(cargas)).catch(function () {});
+    }
+
+    async function descargarTarjetaImagen(registro, tarjetaElemento) {
+      const clon = tarjetaElemento.cloneNode(true);
+      const nombre = nombreVisible(registro.persona);
+
+      const reroll = clon.querySelector('.reroll-btn');
+      if (reroll) reroll.remove();
+      const acciones = clon.querySelector('.card-acciones');
+      if (acciones) acciones.remove();
+
+      const bloqueNombre = clon.querySelector('.card-bloque-nombre');
+      if (bloqueNombre) {
+        const gracias = document.createElement('p');
+        gracias.className = 'card-agradecimiento';
+        gracias.innerHTML = 'Gracias por participar de la jornada de carreras de desarrollo web 2026'
+          + '<span class="card-agradecimiento-nombre">' + esc(nombre) + '</span>';
+        bloqueNombre.appendChild(gracias);
+      }
+
+      const ancho = tarjetaElemento.offsetWidth;
+      const alto = tarjetaElemento.offsetHeight;
+      clon.style.position = 'absolute';
+      clon.style.left = '-10000px';
+      clon.style.top = '0';
+      clon.style.width = ancho + 'px';
+      clon.style.height = alto + 'px';
+      document.body.appendChild(clon);
+
+      try {
+        await esperarFuentes();
+        const canvas = await html2canvas(clon, { scale: 2, backgroundColor: null, logging: false, useCORS: true });
+        const blob = await new Promise(function (resolve) {
+          canvas.toBlob(resolve, 'image/png');
+        });
+        descargarBlob(registro.slug + '.png', blob, 'image/png');
+      } finally {
+        if (clon.parentNode) clon.parentNode.removeChild(clon);
+      }
+    }
+
+    function generarIndexHTML(registros) {
+      const items = registros.map(function (r) {
+        return '      <li><a href="tarjetas/' + encodeURIComponent(r.slug) + '.html">' + esc(nombreVisible(r.persona)) + '</a></li>';
+      }).join('\n');
+      return '<!DOCTYPE html>\n'
+        + '<html lang="es">\n'
+        + '<head>\n'
+        + '  <meta charset="UTF-8">\n'
+        + '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+        + '  <title>Tarjetas de presentación</title>\n'
+        + '  <style>\n'
+        + '    body{background:#101014;color:#e9e9ee;font-family:"Inter",Arial,sans-serif;margin:0;padding:2rem 1rem;}\n'
+        + '    h1{font-size:1.3rem;font-weight:600;}\n'
+        + '    ul{list-style:none;padding:0;}\n'
+        + '    li{margin:.45rem 0;}\n'
+        + '    a{color:#7c5cff;text-decoration:none;}\n'
+        + '    a:hover{text-decoration:underline;}\n'
+        + '  </style>\n'
+        + '</head>\n'
+        + '<body>\n'
+        + '  <h1>Tarjetas de presentación</h1>\n'
+        + '  <ul>\n' + items + '\n'
+        + '  </ul>\n'
+        + '</body>\n'
+        + '</html>\n';
+    }
+
+    async function descargarTodoComoZip() {
+      if (!ultimasPersonas || ultimasPersonas.length === 0) return;
+      const zip = new JSZip();
+      const carpeta = zip.folder('tarjetas');
+      ultimasPersonas.forEach(function (registro) {
+        carpeta.file(registro.slug + '.html', generarHTMLIndividual(registro));
+      });
+      zip.file('index.html', generarIndexHTML(ultimasPersonas));
+      const blob = await zip.generateAsync({ type: 'blob' });
+      descargarBlob('tarjetas-presentacion.zip', blob, 'application/zip');
+    }
+
+    /* ============================================================
+       CARGA DE DATOS
+    ============================================================ */
+    function leerArchivo(file) {
+      const lector = new FileReader();
+      lector.onload = function (e) {
+        csvText.value = e.target.result;
+        const titulo = dropZone.querySelector('.drop-titulo');
+        if (titulo) titulo.textContent = "📄 " + (file ? file.name : 'archivo') + " cargado — hacé clic en 'Generar tarjetas'";
+      };
+      lector.onerror = function () {
+        if (window.Swal && typeof Swal.fire === 'function') {
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo leer el archivo',
+            text: 'Ocurrió un error al leer el archivo. Probá con otro CSV.',
+            background: '#17171d',
+            color: '#e9e9ee',
+            confirmButtonColor: '#7c5cff'
+          });
+        }
+      };
+      lector.readAsText(file, 'UTF-8');
+    }
+
+    function urlArchivoEjemplo() {
+      return new URL('personas.csv', window.location.href).href;
+    }
+
+    async function cargarEjemplo() {
+      const url = urlArchivoEjemplo();
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const texto = await res.text();
+        csvText.value = texto;
+        const titulo = dropZone.querySelector('.drop-titulo');
+        if (titulo) titulo.textContent = "📄 personas.csv cargado — hacé clic en 'Generar tarjetas'";
+      } catch (err) {
+        if (window.Swal && typeof Swal.fire === 'function') {
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo leer personas.csv',
+            html: 'No se pudo leer el archivo desde esta URL:<br><code style="background:#26262f;color:#e9e9ee;padding:2px 6px;border-radius:4px;word-break:break-all;display:inline-block;margin-top:6px;">' + esc(url) + '</code><br><br>Si abriste el HTML con doble clic (file://), el navegador bloquea la lectura por CORS. Probá sirviendo esta carpeta con un servidor local (por ejemplo <code style="color:#e9e9ee;">python -m http.server</code>) o publicándola en GitHub Pages.',
+            background: '#17171d',
+            color: '#e9e9ee',
+            confirmButtonColor: '#7c5cff'
+          });
+        }
+      }
+    }
+
+    function generar() {
+      if (csvText.value.trim() === '') {
+        if (window.Swal && typeof Swal.fire === 'function') {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Falta el CSV',
+            text: 'Subí un archivo CSV o pegá su contenido en el área de texto para generar las tarjetas.',
+            background: '#17171d',
+            color: '#e9e9ee',
+            confirmButtonColor: '#7c5cff'
+          });
+        }
+        return;
+      }
+      const personas = parseCSV(csvText.value);
+      renderTarjetas(personas);
+    }
+
+    /* ============================================================
+       QR GRANDE DE LA PÁGINA
+    ============================================================ */
+    function generarQR() {
+      if (qrPaginaGenerado) return;
+      const contenedor = $('qrPagina');
+      const nivel = (typeof QRCode !== 'undefined' && QRCode.CorrectLevel) ? QRCode.CorrectLevel.M : undefined;
+      const opciones = { text: urlActual, width: 220, height: 220, colorDark: '#000000', colorLight: '#ffffff' };
+      if (nivel !== undefined) opciones.correctLevel = nivel;
+      new QRCode(contenedor, opciones);
+      const urlParrafo = document.querySelector('.qr-pagina-url');
+      if (urlParrafo) urlParrafo.textContent = urlActual;
+      qrPaginaGenerado = true;
+    }
+
+    function toggleQR() {
+      const oculto = qrPaginaWrapper.classList.contains('d-none');
+      if (oculto) {
+        qrPaginaWrapper.classList.remove('d-none');
+        generarQR();
+        btnVerQR.textContent = '🔲 Ocultar QR de esta página';
+      } else {
+        qrPaginaWrapper.classList.add('d-none');
+        btnVerQR.textContent = '🔲 Ver QR de esta página';
+      }
+    }
+
+    /* ============================================================
+       EVENTOS
+    ============================================================ */
+    dropZone.addEventListener('click', function () { fileInput.click(); });
+
+    ['dragover', 'drop'].forEach(function (evt) {
+      window.addEventListener(evt, function (e) { e.preventDefault(); });
+    });
+
+    dropZone.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', function () {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const archivo = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (archivo) leerArchivo(archivo);
+    });
+
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files && fileInput.files[0]) leerArchivo(fileInput.files[0]);
+    });
+
+    btnGenerar.addEventListener('click', generar);
+    btnEjemplo.addEventListener('click', cargarEjemplo);
+    btnDescargarZip.addEventListener('click', descargarTodoComoZip);
+    btnVerQR.addEventListener('click', toggleQR);
+
+    /* ============================================================
+       AUTOTEST (sección 12A) — corre una sola vez, solo consola
+    ============================================================ */
+    function autoTest() {
+      let todoOk = true;
+      function comprobar(condicion, mensaje) {
+        if (!condicion) {
+          todoOk = false;
+          console.error('autoTest falla: ' + mensaje);
+        }
+      }
+
+      // parseCSV: 5 columnas completas en varias filas
+      const csvCompleto = [
+        'nombre,whatsapp,mail,linkedin,instagram',
+        'Ana López,+54 9 11 5555-0101,ana@correo.com,https://linkedin.com/in/ana,https://instagram.com/ana',
+        'Leo Díaz,5491155550102,leo@correo.com,https://linkedin.com/in/leo,'
+      ].join('\n');
+      const completo = parseCSV(csvCompleto);
+      comprobar(completo.length === 2, 'parseCSV completo: se esperaban 2 filas, llegaron ' + completo.length);
+      comprobar(completo[0].nombre === 'Ana López', 'parseCSV completo: nombre fila 0 inesperado → ' + JSON.stringify(completo[0]));
+      comprobar(completo[0].whatsapp === '+54 9 11 5555-0101', 'parseCSV completo: whatsapp fila 0 inesperado');
+      comprobar(completo[0].mail === 'ana@correo.com', 'parseCSV completo: mail fila 0 inesperado');
+      comprobar(completo[0].linkedin === 'https://linkedin.com/in/ana', 'parseCSV completo: linkedin fila 0 inesperado');
+      comprobar(completo[0].instagram === 'https://instagram.com/ana', 'parseCSV completo: instagram fila 0 inesperado');
+
+      // parseCSV: linkedin/instagram vacíos → '' (nunca undefined) y no descarta la fila
+      const fila2 = completo[1];
+      comprobar(typeof fila2.instagram === 'string' && fila2.instagram === '', 'parseCSV: instagram vacío debería ser "" y nunca undefined → ' + JSON.stringify(fila2.instagram));
+      comprobar(fila2.linkedin === 'https://linkedin.com/in/leo', 'parseCSV: linkedin fila con instagram vacío se perdió');
+      const csvSoloNombre = 'nombre,whatsapp,mail,linkedin,instagram\nSolo Nombre,,,,\n';
+      const solo = parseCSV(csvSoloNombre);
+      comprobar(solo.length === 1 && solo[0].nombre === 'Solo Nombre', 'parseCSV: fila con solo nombre no debe descartarse');
+      comprobar(typeof solo[0].mail === 'string' && solo[0].mail === '', 'parseCSV: mail vacío debe ser string vacío, no undefined');
+
+      // parseCSV: fila totalmente vacía se descarta
+      const csvConVacia = 'nombre,whatsapp,mail,linkedin,instagram\nValor Real,111,v@x.com,,\n,,,,\n';
+      const conVacia = parseCSV(csvConVacia);
+      comprobar(conVacia.length === 1, 'parseCSV: fila totalmente vacía debería descartarse → ' + conVacia.length);
+
+      // parseCSV: valor entre comillas con coma interna y comillas escapadas
+      const csvComillas = 'nombre,whatsapp,mail,linkedin,instagram\n"Pérez, Juan",+54 11 5555-0199,juan@x.com,,\n"Dijo ""hola"", y se fue",22,x2@x.com,,\n';
+      const conComillas = parseCSV(csvComillas);
+      comprobar(conComillas.length === 2, 'parseCSV comillas: se esperaban 2 filas → ' + conComillas.length);
+      comprobar(conComillas[0].nombre === 'Pérez, Juan', 'parseCSV comillas: nombre con coma interna mal parseado → ' + JSON.stringify(conComillas[0].nombre));
+      comprobar(conComillas[1].nombre === 'Dijo "hola", y se fue', 'parseCSV comillas: comillas escapadas mal parseadas → ' + JSON.stringify(conComillas[1].nombre));
+
+      // parseCSV: header con alias aceptado
+      const csvAlias = 'name,wsp,correo\nJosé,54911,jose@x.com\n';
+      const alias = parseCSV(csvAlias);
+      comprobar(alias.length === 1 && alias[0].nombre === 'José' && alias[0].whatsapp === '54911' && alias[0].mail === 'jose@x.com', 'parseCSV: aliases name/wsp/correo no detectados');
+
+      // splitCSVLine
+      const s = splitCSVLine('"Pérez, Juan",+54 11,hola');
+      comprobar(s.length === 3 && s[0] === 'Pérez, Juan' && s[1] === '+54 11' && s[2] === 'hola', 'splitCSVLine: separación con comillas mal → ' + JSON.stringify(s));
+      const s2 = splitCSVLine('a,"b ""c""",d');
+      comprobar(s2.length === 3 && s2[1] === 'b "c"', 'splitCSVLine: comillas escapadas mal → ' + JSON.stringify(s2));
+
+      // limpiarNumero
+      comprobar(limpiarNumero('+54 9 351 555-1234') === '5493515551234', 'limpiarNumero: no limpió "+54 9 351 555-1234" → ' + limpiarNumero('+54 9 351 555-1234'));
+      comprobar(limpiarNumero('(11) 4555-6677') === '1145556677', 'limpiarNumero: no limpió paréntesis/espacios/guiones');
+
+      // slugify
+      comprobar(slugify('José María López') === 'jose-maria-lopez', 'slugify acentos: → ' + slugify('José María López'));
+      comprobar(slugify('  HOLA   Mundo  ') === 'hola-mundo', 'slugify mayúsculas/espacios múltiples: → ' + slugify('  HOLA   Mundo  '));
+      comprobar(slugify('ÁéíÓÚñ') === 'aeioun', 'slugify diacríticos: → ' + slugify('ÁéíÓÚñ'));
+      comprobar(slugify('') === 'contacto', 'slugify vacío: debe dar fallback contacto → ' + slugify(''));
+      comprobar(slugify('   ') === 'contacto', 'slugify solo espacios: debe dar fallback contacto → ' + slugify('   '));
+
+      // iniciales
+      comprobar(iniciales('Mariana Gómez') === 'MG', 'iniciales nombre completo → ' + iniciales('Mariana Gómez'));
+      comprobar(iniciales('Tomás') === 'T', 'iniciales nombre de una sola palabra → ' + iniciales('Tomás'));
+      comprobar(iniciales('', 'juan.perez@correo.com') === 'J', 'iniciales sin nombre pero con mail → ' + iniciales('', 'juan.perez@correo.com'));
+      comprobar(iniciales('', '') === 'C', 'iniciales sin nombre ni mail debe devolver C → ' + iniciales('', ''));
+
+      // temaAleatorio con exclusión
+      let bien = true;
+      for (let i = 0; i < 50; i += 1) {
+        const t = temaAleatorio('theme-menta');
+        if (t === 'theme-menta' || TEMAS.indexOf(t) === -1) { bien = false; break; }
+      }
+      comprobar(bien, 'temaAleatorio(excluir): en 50 tiradas no debe devolver el tema excluido ni temas inexistentes');
+
+      if (todoOk) {
+        console.log('autoTest OK');
+      } else {
+        console.error('autoTest: hubo fallas (ver arriba)');
+      }
+    }
+
+    autoTest();
+  </script>
 </body>
 </html>
